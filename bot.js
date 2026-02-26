@@ -31,7 +31,7 @@ Payments auto deducted via x402 on Solana
 Pauses if wallet < $10
 
 *Pricing:* 
-$0.01 per query 
+$0.001 per query 
 Unlock alpha with each payment
 
 *Commands:*
