@@ -7,6 +7,7 @@ export const CONFIG = {
   SOLANA_RPC: process.env.SOLANA_RPC,
   SOLANA_RSS: process.env.SOLANA_RSS,
   SOLANA_DATA: process.env.SOLANA_DATA,
+  SOLANA_PRICE: process.env.SOLANA_PRICE,
   ALPHA_URL: "http://localhost:4021/alpha",
   TRACK_URL: "http://localhost:4021/track",
   PORT: process.env.PORT || 4021,

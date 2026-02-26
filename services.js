@@ -1,4 +1,3 @@
-
 import { x402Client, wrapFetchWithPayment, x402HTTPClient } from "@x402/fetch";
 import { Connection, LAMPORTS_PER_SOL, PublicKey } from "@solana/web3.js";
 import { createKeyPairSignerFromBytes } from "@solana/kit";
@@ -15,18 +14,6 @@ async function getSigner() {
 }
 
 const connection = new Connection(CONFIG.SOLANA_RPC);
-
-export async function getWalletBalanceUSD() {
-  const signer = await getSigner();
-  const pubkey = new PublicKey(signer.address);
-
-  const balanceLamports = await connection.getBalance(pubkey);
-  const balanceSOL = balanceLamports / LAMPORTS_PER_SOL;
-
-  const SOL_PRICE_USD = 82.98;
-
-  return balanceSOL * SOL_PRICE_USD;
-}
 
 export async function callPaidEndpoint(url) {
   try {
@@ -49,7 +36,6 @@ export async function callPaidEndpoint(url) {
       payment = new x402HTTPClient(client).getPaymentSettleResponse((name) =>
         response.headers.get(name)
       );
-
     } else {
       console.warn(`Request failed with status ${response.status}`);
     }
@@ -59,4 +45,22 @@ export async function callPaidEndpoint(url) {
     console.error("Paid endpoint error:", err);
     throw err;
   }
+}
+
+export async function getWalletBalanceUSD() {
+  const signer = await getSigner();
+  const pubkey = new PublicKey(signer.address);
+
+  const balanceLamports = await connection.getBalance(pubkey);
+  const balanceSOL = balanceLamports / LAMPORTS_PER_SOL;
+
+  const response = await fetch(CONFIG.SOLANA_PRICE);
+  const data = await response.json();
+  const SOL_PRICE_USD = data?.solana?.usd;
+
+  if (!SOL_PRICE_USD) {
+    throw new Error("Invalid SOL price response");
+  }
+
+  return balanceSOL * SOL_PRICE_USD;
 }
